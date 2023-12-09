@@ -26,7 +26,7 @@ def main(args):
     df.to_csv(os.path.join(args.output_dir, "all.csv"))
     df[1] = df[1].astype(int)
 
-    d = 0 # 4分音符の長さ
+    d = 0
     beat_n, beat_b = 0, 0
     tempo = 0.0
 
@@ -37,7 +37,7 @@ def main(args):
 
     bars_data = []
 
-    # ノート以外の情報を抽出
+    # Extract data except notes
     for idx, row in df.iterrows():
         # ===== Header =====
         if row[2] == "Header":
@@ -136,8 +136,7 @@ def main(args):
     df_hyousi_and_tempo = pd.DataFrame(bars_tempo_time_data, columns=["拍子位置", "時間", "拍子分子", "拍子分母", "1小節長さ", "テンポ", "調", "長調/短調", "絶対時間"])
     df_hyousi_and_tempo.to_csv(os.path.join(args.output_dir, "beats_and_tempo.csv"))
 
-
-    # =============== 時間から拍子、絶対時間を算出 ===============
+    # Calc time
     def get_times_t_d(t_d):
         j_bar = 0
         j = 0
@@ -167,7 +166,7 @@ def main(args):
         return t_zettai, t_hyousi
 
 
-    # ===== ノート情報抽出 =====
+    # Extract notes data
     notes_data = []
 
     for _, row in df[df[2] == "Note_on_c"].iterrows():
@@ -185,7 +184,7 @@ def main(args):
         t_zettai_note_on, hyousi_note_on = get_times_t_d(t_note_on)
         t_zettai_note_off, hyousi_note_off = get_times_t_d(t_note_off)
 
-        # 音高
+        # Define pitch display text
         pi_dict_normal = {0: "C", 1: "C#", 2: "D", 3: "Eb", 4: "E", 5: "F", 6: "F#", 7: "G", 8: "G#", 9: "A", 10: "Bb", 11: "B"}
         pi_dict_sharp = {0: "C", 1: "C#", 2: "D", 3: "D#", 4: "E", 5: "F", 6: "F#", 7: "G", 8: "G#", 9: "A", 10: "A#", 11: "B"}
         pi_dict_flat = {0: "C", 1: "Db", 2: "D", 3: "Eb", 4: "E", 5: "F", 6: "Gb", 7: "G", 8: "Ab", 9: "A", 10: "Bb", 11: "B"}
@@ -210,7 +209,7 @@ def main(args):
     df_notes.to_csv(os.path.join(args.output_dir, "notes.csv"))
 
 
-    # ===== テキスト情報抽出 =====
+    # Extract text data
     text_data = []
     for _, row in df[df[2] == "Text_t"].iterrows():
         t = int(row[1])
@@ -219,7 +218,7 @@ def main(args):
         text_data.append([t, t_zettai, get_time(t_zettai), hyousi, text])
     pd.DataFrame(text_data).to_csv(os.path.join(args.output_dir, "texts.csv"))
 
-    # ===== マーカー情報抽出 =====
+    # Extract marker data
     text_data = []
     for _, row in df[df[2] == "Marker_t"].iterrows():
         t = int(row[1])
