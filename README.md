@@ -1,5 +1,5 @@
 # mid2csv
-MIDI to event-wise CSV conversion tool
+MIDI to event-wise CSV conversion tool （MIDIファイルをイベント別にCSVに変換するツール）
 
 - Beats and tempo events
 - Markers
